@@ -3,3 +3,11 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
 }
+
+
+buildscript {
+    dependencies {
+        // Add Safe Args plugin in buildscript
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.0") // or latest version
+    }
+}

@@ -1,4 +1,4 @@
-package com.example.architekt.ui.theme
+package com.stone.architekt.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
