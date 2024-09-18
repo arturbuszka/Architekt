@@ -24,6 +24,14 @@
             android:text="new"
             app:cornerRadius="16dp" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_object_detector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="new"
+            app:cornerRadius="16dp" />
+
 <!--        <com.google.android.material.button.MaterialButton-->
 <!--            android:id="@+id/btn_camera"-->
 <!--            android:layout_width="wrap_content"-->

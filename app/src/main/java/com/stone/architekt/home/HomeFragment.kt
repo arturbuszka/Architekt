@@ -11,7 +11,6 @@ import com.stone.architekt.databinding.FragmentHomeBinding
 
 
 class HomeFragment : Fragment() {
-
     private val viewModel: HomeViewModel by lazy {
         ViewModelProvider(this).get(HomeViewModel::class.java)
     }
@@ -24,6 +23,9 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.btnNew.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionNewProject())
+        }
+        binding.btnObjectDetector.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionGoToObjectDetector())
         }
         return binding.root
 

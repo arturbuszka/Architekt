@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.stone.architekt.objectdetector.ObjectDetectorViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <org.opencv.android.JavaCameraView
+            android:id="@+id/camera_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible" />
+
+    </FrameLayout>
+
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        tools:context=".ProjectFragment">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content">-->
+
+<!--&lt;!&ndash;            <com.google.android.material.button.MaterialButton&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/btn_gallery"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:padding="8dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:text="gallery"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:onClick="@{() -> viewModel.onGallerySelected()}"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:cornerRadius="16dp" />&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <com.google.android.material.button.MaterialButton&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/btn_camera"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:padding="8dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:text="photo"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:cornerRadius="16dp" />&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <ImageView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/main_photo_image"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="0dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="266dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:scaleType="centerCrop"&ndash;&gt;-->
+
+<!--&lt;!&ndash;                app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:layout_constraintTop_toTopOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                tools:src="@tools:sample/backgrounds/scenic" />&ndash;&gt;-->
+<!--        </LinearLayout>-->
+
+<!--    </ScrollView>-->
+</layout>

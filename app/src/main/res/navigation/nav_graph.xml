@@ -13,12 +13,21 @@
         <action
             android:id="@+id/action_newProject"
             app:destination="@id/projectFragment" />
+        <action
+            android:id="@+id/action_goToObjectDetector"
+            app:destination="@id/objectdetectorFragment" />
     </fragment>
     <fragment
         android:id="@+id/projectFragment"
         android:name="com.stone.architekt.project.ProjectFragment"
         android:label="Project"
         tools:layout="@layout/fragment_project" >
+    </fragment>
+    <fragment
+        android:id="@+id/objectdetectorFragment"
+        android:name="com.stone.architekt.objectdetector.ObjectDetectorFragment"
+        android:label="ObjectDetector"
+        tools:layout="@layout/fragment_objectdetector" >
     </fragment>
 
 </navigation>
