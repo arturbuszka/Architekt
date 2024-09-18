@@ -7,15 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.Manifest
 import android.hardware.camera2.CameraCharacteristics
-import android.hardware.camera2.CameraExtensionCharacteristics
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.stone.architekt.R
 import com.stone.architekt.databinding.FragmentObjectdetectorBinding
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.android.OpenCVLoader
