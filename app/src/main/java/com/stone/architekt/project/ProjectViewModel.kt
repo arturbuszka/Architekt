@@ -9,7 +9,7 @@ class ProjectViewModel : ViewModel() {
     val eventGallerySelected: LiveData<Boolean>
         get() = _eventGallerySelected
 
-    fun onGallerySelected() {
+    fun onGallerySelect() {
         _eventGallerySelected.value = true
     }
 

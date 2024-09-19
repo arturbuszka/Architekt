@@ -3,4 +3,6 @@
     <string name="processed_image">Processed Image</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="description_image">description</string>
+    <string name="loading">loading...</string>
 </resources>

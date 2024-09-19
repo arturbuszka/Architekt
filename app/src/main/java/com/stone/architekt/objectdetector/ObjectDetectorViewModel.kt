@@ -1,10 +1,16 @@
 package com.stone.architekt.objectdetector
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.opencv.android.OpenCVLoader
+import org.opencv.android.Utils
 import org.opencv.core.Mat
 import org.opencv.core.MatOfPoint
 import org.opencv.core.MatOfPoint2f
@@ -14,18 +20,27 @@ import org.opencv.core.Size
 import org.opencv.imgproc.Imgproc
 
 class ObjectDetectorViewModel : ViewModel() {
-    private val _frameCaptured = MutableLiveData<Boolean>()
-    val frameCaptured: LiveData<Boolean>
-        get() = _frameCaptured
 
-    fun onCaptureFrame() {
-        _frameCaptured.value = true
+    enum class CameraState {
+        PREVIEWING,
+        CAPTURED,
+        PROCESSING,
+        LOADING
     }
 
-    fun onCaptureFrameCompleted() {
-        _frameCaptured.value = false
-    }
+    private val _cameraState = MutableLiveData<CameraState>()
+    val cameraState: LiveData<CameraState>
+        get() = _cameraState
 
+    private var _newPhoto = MutableLiveData<Bitmap?>()
+    val photo: LiveData<Bitmap?>
+        get() = _newPhoto
+
+    private lateinit var boundingBoxFrameCaptured: Mat
+
+    init {
+        _cameraState.value = CameraState.PREVIEWING
+    }
 
     fun init() {
         if (!OpenCVLoader.initLocal()) {
@@ -35,7 +50,26 @@ class ObjectDetectorViewModel : ViewModel() {
         }
     }
 
-    fun onCameraFrame(frame: Mat): Mat {
+    fun onCaptureFrame() {
+        if (!boundingBoxFrameCaptured.empty()) {
+            _cameraState.value = CameraState.PROCESSING
+            processFrameInBackground(boundingBoxFrameCaptured.clone())
+        } else {
+            Log.e("objectdetector", "Captured frame is empty, cannot process.")
+            _cameraState.value = CameraState.PREVIEWING
+        }
+    }
+
+    fun onCaptureFrameCompleted() {
+        _cameraState.value = CameraState.CAPTURED
+    }
+
+    fun resetCamera() {
+        _cameraState.value = CameraState.PREVIEWING
+        _newPhoto.value = null;
+    }
+
+    fun boundingBox(frame: Mat): Mat {
         val gray = Mat()
         Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY)
         Imgproc.GaussianBlur(gray, gray, Size(5.0, 5.0), 0.0)
@@ -43,13 +77,24 @@ class ObjectDetectorViewModel : ViewModel() {
         Imgproc.Canny(gray, edges, 50.0, 150.0)
         val contours = mutableListOf<MatOfPoint>()
         val hierarchy = Mat()
-        Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE)
+        Imgproc.findContours(
+            edges,
+            contours,
+            hierarchy,
+            Imgproc.RETR_TREE,
+            Imgproc.CHAIN_APPROX_SIMPLE
+        )
 
         for (contour in contours) {
             // Approximate contours to polygons + get bounding rects
             val approxCurve = MatOfPoint2f()
             val contour2f = MatOfPoint2f(*contour.toArray())
-            Imgproc.approxPolyDP(contour2f, approxCurve, Imgproc.arcLength(contour2f, true) * 0.02, true)
+            Imgproc.approxPolyDP(
+                contour2f,
+                approxCurve,
+                Imgproc.arcLength(contour2f, true) * 0.02,
+                true
+            )
             val points = MatOfPoint(*approxCurve.toArray())
 
             val boundRect = Imgproc.boundingRect(points)
@@ -58,24 +103,72 @@ class ObjectDetectorViewModel : ViewModel() {
             val aspectRatio = boundRect.width.toDouble() / boundRect.height.toDouble()
             if (aspectRatio >= 0.8 && aspectRatio <= 1.2 && points.total() >= 8) {
                 // Circle detected (like a can)
-                Imgproc.circle(frame, Point(boundRect.x + boundRect.width / 2.0, boundRect.y + boundRect.height / 2.0),
-                    Math.min(boundRect.width, boundRect.height) / 2, Scalar(0.0, 255.0, 0.0), 2)
+                Imgproc.circle(
+                    frame,
+                    Point(
+                        boundRect.x + boundRect.width / 2.0,
+                        boundRect.y + boundRect.height / 2.0
+                    ),
+                    Math.min(boundRect.width, boundRect.height) / 2,
+                    Scalar(0.0, 255.0, 0.0),
+                    2
+                )
             } else if (points.total() == 4L) {
                 // Rectangle detected (like a notebook)
-                Imgproc.rectangle(frame, Point(boundRect.x.toDouble(), boundRect.y.toDouble()),
-                    Point(boundRect.x + boundRect.width.toDouble(), boundRect.y + boundRect.height.toDouble()),
-                    Scalar(255.0, 0.0, 0.0), 2)
+                Imgproc.rectangle(
+                    frame, Point(boundRect.x.toDouble(), boundRect.y.toDouble()),
+                    Point(
+                        boundRect.x + boundRect.width.toDouble(),
+                        boundRect.y + boundRect.height.toDouble()
+                    ),
+                    Scalar(255.0, 0.0, 0.0), 2
+                )
             }
         }
         return frame
     }
 
-    private val _cameraFrame = MutableLiveData<Mat>()
-    val cameraFrame: LiveData<Mat> get() = _cameraFrame
-
-    fun updateFrame(frame:Mat) {
-        _cameraFrame.value = frame
+    fun proccesCaputredFrame(frame: Mat): Mat {
+        boundingBoxFrameCaptured = boundingBox(frame).clone()
+        return boundingBoxFrameCaptured
     }
 
+    private fun processFrameInBackground(rgbaMat: Mat) {
+        viewModelScope.launch(Dispatchers.IO) {  // Offload to IO thread
+            try {
+                Log.d("objectdetector", "Starting heavy processing")
+                val bitmap = convertMatToBitmap(rgbaMat)  // Heavy operation
+                Log.d("objectdetector", "Heavy processing complete")
 
+                // Switch back to main thread to update the UI
+                withContext(Dispatchers.Main) {
+                    Log.d("objectdetector", "Switching to Main Thread")
+                    _newPhoto.value = bitmap
+                    _cameraState.value = CameraState.CAPTURED
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    Log.d("objectdetector", "Error during processing")
+                    _cameraState.value = CameraState.PREVIEWING  // Reset to PREVIEWING
+                }
+            }
+        }
+    }
+
+    fun convertMatToBitmap(mat: Mat): Bitmap {
+        // Check if the Mat is empty
+        if (mat.empty()) {
+            Log.d("objectdetector", "Mat is empty")
+            throw IllegalArgumentException("Mat is empty")
+        }
+
+        // Create a Bitmap with the same dimensions as the Mat
+        val bitmap = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888)
+
+        // Convert the Mat to a Bitmap
+        Utils.matToBitmap(mat, bitmap)
+
+        return bitmap
+    }
 }
