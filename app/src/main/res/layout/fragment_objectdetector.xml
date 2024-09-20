@@ -20,22 +20,22 @@
             android:layout_height="match_parent"
             android:visibility="visible" />
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitCenter"
-                    android:contentDescription="@string/description_image" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/imageView"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:scaleType="fitCenter"-->
+<!--                    android:contentDescription="@string/description_image" />-->
 
-        <TextView
-            android:id="@+id/text_loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="sans-serif"
-            android:text="@string/loading"
-            android:textSize="14sp"
-            android:textStyle="normal" />
+<!--        <TextView-->
+<!--            android:id="@+id/text_loading"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="16dp"-->
+<!--            android:fontFamily="sans-serif"-->
+<!--            android:text="@string/loading"-->
+<!--            android:textSize="14sp"-->
+<!--            android:textStyle="normal" />-->
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_new_photo"
@@ -46,14 +46,14 @@
             android:onClick="@{() -> viewModel.onCaptureFrame()}"
             app:cornerRadius="16dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="reset"
-            android:onClick="@{() -> viewModel.resetCamera()}"
-            app:cornerRadius="16dp" />
+<!--        <com.google.android.material.button.MaterialButton-->
+<!--            android:id="@+id/btn_reset"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="8dp"-->
+<!--            android:text="reset"-->
+<!--            android:onClick="@{() -> viewModel.resetCamera()}"-->
+<!--            app:cornerRadius="16dp" />-->
 
     </FrameLayout>
 </layout>

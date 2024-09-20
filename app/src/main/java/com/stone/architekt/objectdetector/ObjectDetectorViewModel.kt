@@ -24,8 +24,7 @@ class ObjectDetectorViewModel : ViewModel() {
     enum class CameraState {
         PREVIEWING,
         CAPTURED,
-        PROCESSING,
-        LOADING
+        WAITING
     }
 
     private val _cameraState = MutableLiveData<CameraState>()
@@ -39,34 +38,69 @@ class ObjectDetectorViewModel : ViewModel() {
     private lateinit var boundingBoxFrameCaptured: Mat
 
     init {
-        _cameraState.value = CameraState.PREVIEWING
+        loadDependencies()
+        setCameraState(CameraState.PREVIEWING)
     }
 
-    fun init() {
-        if (!OpenCVLoader.initLocal()) {
-            Log.e("OpenCV", "Unable to load OpenCV")
-        } else {
-            Log.d("OpenCV", "OpenCV loaded successfully")
-        }
-    }
 
-    fun onCaptureFrame() {
-        if (!boundingBoxFrameCaptured.empty()) {
-            _cameraState.value = CameraState.PROCESSING
-            processFrameInBackground(boundingBoxFrameCaptured.clone())
-        } else {
-            Log.e("objectdetector", "Captured frame is empty, cannot process.")
-            _cameraState.value = CameraState.PREVIEWING
-        }
-    }
-
-    fun onCaptureFrameCompleted() {
-        _cameraState.value = CameraState.CAPTURED
+    fun waitRequest() {
+        setCameraState(CameraState.WAITING)
     }
 
     fun resetCamera() {
-        _cameraState.value = CameraState.PREVIEWING
-        _newPhoto.value = null;
+        setCameraState(CameraState.PREVIEWING)
+        setPhoto(null)
+    }
+
+    fun proccesCaputredFrame(frame: Mat): Mat {
+        boundingBoxFrameCaptured = boundingBox(frame)
+        return boundingBoxFrameCaptured
+    }
+
+    fun onCaptureFrame() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+//                if (boundingBoxFrameCaptured.empty()) {
+//                    Log.e("objectdetector", "Mat is empty before conversion")
+//                    setCameraState(CameraState.PREVIEWING)
+//                    return@launch
+//                }
+                Log.d("objectdetector", "Starting heavy processing")
+//                val bitmap = convertMatToBitmap(boundingBoxFrameCaptured.clone())
+                Log.d("objectdetector", "Heavy processing complete")
+
+                withContext(Dispatchers.Main) {
+                    Log.d("objectdetector", "Switching to Main Thread")
+//                    setPhoto(bitmap)
+                    setCameraState(CameraState.CAPTURED)
+//                    onCaptureFrameCompleted()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    Log.d("objectdetector", "Error during processing")
+//                    setCameraState(CameraState.PREVIEWING)
+                }
+            }
+        }
+    }
+
+    private fun setCameraState(state: CameraState) {
+        _cameraState.value = state
+    }
+
+    fun setPhoto(new: Bitmap?) {
+        _newPhoto.value = new
+    }
+
+    fun convertMatToBitmap(mat: Mat): Bitmap {
+        if (mat.empty()) {
+            Log.d("objectdetector", "Mat is empty")
+            throw IllegalArgumentException("Mat is empty")
+        }
+        val bitmap = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888)
+        Utils.matToBitmap(mat, bitmap)
+        return bitmap
     }
 
     fun boundingBox(frame: Mat): Mat {
@@ -128,47 +162,11 @@ class ObjectDetectorViewModel : ViewModel() {
         return frame
     }
 
-    fun proccesCaputredFrame(frame: Mat): Mat {
-        boundingBoxFrameCaptured = boundingBox(frame).clone()
-        return boundingBoxFrameCaptured
-    }
-
-    private fun processFrameInBackground(rgbaMat: Mat) {
-        viewModelScope.launch(Dispatchers.IO) {  // Offload to IO thread
-            try {
-                Log.d("objectdetector", "Starting heavy processing")
-                val bitmap = convertMatToBitmap(rgbaMat)  // Heavy operation
-                Log.d("objectdetector", "Heavy processing complete")
-
-                // Switch back to main thread to update the UI
-                withContext(Dispatchers.Main) {
-                    Log.d("objectdetector", "Switching to Main Thread")
-                    _newPhoto.value = bitmap
-                    _cameraState.value = CameraState.CAPTURED
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                withContext(Dispatchers.Main) {
-                    Log.d("objectdetector", "Error during processing")
-                    _cameraState.value = CameraState.PREVIEWING  // Reset to PREVIEWING
-                }
-            }
+    private fun loadDependencies() {
+        if (!OpenCVLoader.initLocal()) {
+            Log.e("OpenCV", "Unable to load OpenCV")
+        } else {
+            Log.d("OpenCV", "OpenCV loaded successfully")
         }
-    }
-
-    fun convertMatToBitmap(mat: Mat): Bitmap {
-        // Check if the Mat is empty
-        if (mat.empty()) {
-            Log.d("objectdetector", "Mat is empty")
-            throw IllegalArgumentException("Mat is empty")
-        }
-
-        // Create a Bitmap with the same dimensions as the Mat
-        val bitmap = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888)
-
-        // Convert the Mat to a Bitmap
-        Utils.matToBitmap(mat, bitmap)
-
-        return bitmap
     }
 }

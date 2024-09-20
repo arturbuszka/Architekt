@@ -9,12 +9,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import android.Manifest
 import android.hardware.camera2.CameraCharacteristics
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.stone.architekt.databinding.FragmentObjectdetectorBinding
 import org.opencv.android.CameraBridgeViewBase
@@ -24,10 +23,7 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
     private lateinit var viewModel: ObjectDetectorViewModel
     private lateinit var binding: FragmentObjectdetectorBinding
     private lateinit var cameraView: CameraBridgeViewBase
-    private lateinit var imageView: ImageView
     private lateinit var captureButton: MaterialButton
-    private lateinit var resetButton: MaterialButton
-    private lateinit var loadingText: TextView
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -48,11 +44,7 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         binding.lifecycleOwner = this
         viewModel = ViewModelProviders.of(this).get(ObjectDetectorViewModel::class.java)
         binding.viewModel = viewModel
-        viewModel.init()
-        imageView = binding.imageView
         captureButton = binding.btnNewPhoto
-        resetButton = binding.btnReset
-        loadingText = binding.textLoading
         initCamera()
         requestCameraPermission()
 
@@ -60,53 +52,36 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
             when (cameraState) {
                 ObjectDetectorViewModel.CameraState.PREVIEWING -> showCameraPreview()
                 ObjectDetectorViewModel.CameraState.CAPTURED -> showCapturedImage()
-                ObjectDetectorViewModel.CameraState.PROCESSING -> showProcessing()
-                ObjectDetectorViewModel.CameraState.LOADING -> showLoading()
+                ObjectDetectorViewModel.CameraState.WAITING -> hide()
             }
         })
 
-        viewModel.photo.observe(viewLifecycleOwner, Observer { bitmap ->
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap)
-            }
-        })
+
+//        viewModel.photo.observe(viewLifecycleOwner, Observer { bitmap ->
+//            if (bitmap != null) {
+//                imageView.setImageBitmap(bitmap)
+//            }
+//        })
         return binding.root
     }
 
-    private fun showLoading() {
-        loadingText.visibility = View.VISIBLE
+    private fun hide() {
         cameraView.disableView()
         cameraView.visibility = View.GONE
-        imageView.visibility = View.GONE
         captureButton.visibility = View.GONE
-        resetButton.visibility = View.GONE
-    }
-
-    private fun showProcessing() {
-        loadingText.visibility = View.VISIBLE
-        cameraView.disableView()
-        cameraView.visibility = View.GONE
-        imageView.visibility = View.GONE
-        captureButton.visibility = View.GONE
-        resetButton.visibility = View.GONE
     }
 
     private fun showCapturedImage() {
-        loadingText.visibility = View.GONE
+        findNavController().navigate(ObjectDetectorFragmentDirections.actionShowCapturedFrame())
         cameraView.disableView()
         cameraView.visibility = View.GONE
-        imageView.visibility = View.VISIBLE
         captureButton.visibility = View.GONE
-        resetButton.visibility = View.VISIBLE
     }
 
     private fun showCameraPreview() {
-        loadingText.visibility = View.GONE
         cameraView.enableView()
         cameraView.visibility = View.VISIBLE
-        imageView.visibility = View.GONE
         captureButton.visibility = View.VISIBLE
-        resetButton.visibility = View.GONE
     }
 
     private fun initCamera() {
@@ -161,19 +136,21 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         super.onDestroyView()
         if (::cameraView.isInitialized) {
             cameraView.disableView()
+            viewModel.resetCamera()
         }
     }
 
     override fun onResume() {
         super.onResume()
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-            == PackageManager.PERMISSION_GRANTED) {
-            cameraView.enableView()
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            viewModel.resetCamera()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        cameraView.disableView()
+        viewModel.waitRequest()
     }
 }

@@ -28,6 +28,18 @@
         android:name="com.stone.architekt.objectdetector.ObjectDetectorFragment"
         android:label="ObjectDetector"
         tools:layout="@layout/fragment_objectdetector" >
+        <action
+            android:id="@+id/action_showCapturedFrame"
+            app:destination="@id/capturedframeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/capturedframeFragment"
+        android:name="com.stone.architekt.objectdetector.CapturedFrameFragment"
+        android:label="CapturedFramer"
+        tools:layout="@layout/fragment_capturedframe" >
+        <action
+            android:id="@+id/action_backToObjectDetector"
+            app:destination="@id/objectdetectorFragment" />
     </fragment>
 
 </navigation>
