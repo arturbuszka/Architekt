@@ -60,26 +60,25 @@ class ObjectDetectorViewModel : ViewModel() {
     fun onCaptureFrame() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-//                if (boundingBoxFrameCaptured.empty()) {
-//                    Log.e("objectdetector", "Mat is empty before conversion")
-//                    setCameraState(CameraState.PREVIEWING)
-//                    return@launch
-//                }
+                if (boundingBoxFrameCaptured.empty()) {
+                    Log.e("objectdetector", "Mat is empty before conversion")
+                    setCameraState(CameraState.PREVIEWING)
+                    return@launch
+                }
                 Log.d("objectdetector", "Starting heavy processing")
-//                val bitmap = convertMatToBitmap(boundingBoxFrameCaptured.clone())
+                val bitmap = convertMatToBitmap(boundingBoxFrameCaptured.clone())
                 Log.d("objectdetector", "Heavy processing complete")
 
                 withContext(Dispatchers.Main) {
                     Log.d("objectdetector", "Switching to Main Thread")
-//                    setPhoto(bitmap)
+                    setPhoto(bitmap)
                     setCameraState(CameraState.CAPTURED)
-//                    onCaptureFrameCompleted()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     Log.d("objectdetector", "Error during processing")
-//                    setCameraState(CameraState.PREVIEWING)
+                    setCameraState(CameraState.PREVIEWING)
                 }
             }
         }

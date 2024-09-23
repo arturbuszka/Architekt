@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import android.Manifest
+import android.graphics.Bitmap
 import android.hardware.camera2.CameraCharacteristics
+import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -18,9 +20,12 @@ import com.google.android.material.button.MaterialButton
 import com.stone.architekt.databinding.FragmentObjectdetectorBinding
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.core.Mat
+import java.io.File
+import java.io.FileOutputStream
 
 class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
     private lateinit var viewModel: ObjectDetectorViewModel
+
     private lateinit var binding: FragmentObjectdetectorBinding
     private lateinit var cameraView: CameraBridgeViewBase
     private lateinit var captureButton: MaterialButton
@@ -55,13 +60,6 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
                 ObjectDetectorViewModel.CameraState.WAITING -> hide()
             }
         })
-
-
-//        viewModel.photo.observe(viewLifecycleOwner, Observer { bitmap ->
-//            if (bitmap != null) {
-//                imageView.setImageBitmap(bitmap)
-//            }
-//        })
         return binding.root
     }
 
@@ -72,7 +70,8 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
     }
 
     private fun showCapturedImage() {
-        findNavController().navigate(ObjectDetectorFragmentDirections.actionShowCapturedFrame())
+        val uri = saveBitmapToFile(viewModel.photo.value)
+        findNavController().navigate(ObjectDetectorFragmentDirections.actionShowCapturedFrame(uri.toString()))
         cameraView.disableView()
         cameraView.visibility = View.GONE
         captureButton.visibility = View.GONE
@@ -152,5 +151,17 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
     override fun onPause() {
         super.onPause()
         viewModel.waitRequest()
+    }
+
+    private fun saveBitmapToFile(bitmap: Bitmap?): Uri {
+        val file = File(requireContext().cacheDir, "captured_frame.png")
+        val outputStream = FileOutputStream(file)
+        try {
+            bitmap!!.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+        } finally {
+            outputStream.flush()
+            outputStream.close()
+        }
+        return Uri.fromFile(file)
     }
 }

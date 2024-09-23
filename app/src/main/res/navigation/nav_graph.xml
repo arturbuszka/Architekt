@@ -9,7 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.stone.architekt.home.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_newProject"
             app:destination="@id/projectFragment" />
@@ -21,13 +21,12 @@
         android:id="@+id/projectFragment"
         android:name="com.stone.architekt.project.ProjectFragment"
         android:label="Project"
-        tools:layout="@layout/fragment_project" >
-    </fragment>
+        tools:layout="@layout/fragment_project"></fragment>
     <fragment
         android:id="@+id/objectdetectorFragment"
         android:name="com.stone.architekt.objectdetector.ObjectDetectorFragment"
         android:label="ObjectDetector"
-        tools:layout="@layout/fragment_objectdetector" >
+        tools:layout="@layout/fragment_objectdetector">
         <action
             android:id="@+id/action_showCapturedFrame"
             app:destination="@id/capturedframeFragment" />
@@ -35,8 +34,11 @@
     <fragment
         android:id="@+id/capturedframeFragment"
         android:name="com.stone.architekt.objectdetector.CapturedFrameFragment"
-        android:label="CapturedFramer"
-        tools:layout="@layout/fragment_capturedframe" >
+        android:label="CapturedFrame"
+        tools:layout="@layout/fragment_capturedframe">
+        <argument
+            android:name="imageUri"
+            app:argType="string" />
         <action
             android:id="@+id/action_backToObjectDetector"
             app:destination="@id/objectdetectorFragment" />

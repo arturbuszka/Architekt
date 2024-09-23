@@ -14,22 +14,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--        <ImageView-->
-        <!--            android:id="@+id/imageView"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:scaleType="fitCenter"-->
-        <!--            android:contentDescription="@string/description_image" />-->
-
-                <TextView
-                    android:id="@+id/sample"
+                <ImageView
+                    android:id="@+id/capturedFrame"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/sample"
-                    android:textSize="14sp"
-                    android:textStyle="normal" />
+                    android:scaleType="fitCenter"
+                    android:contentDescription="@string/description_image" />
+
+<!--                <TextView-->
+<!--                    android:id="@+id/sample"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginBottom="16dp"-->
+<!--                    android:fontFamily="sans-serif"-->
+<!--                    android:text="@string/sample"-->
+<!--                    android:textSize="14sp"-->
+<!--                    android:textStyle="normal" />-->
 
 <!--        <com.google.android.material.button.MaterialButton-->
 <!--            android:id="@+id/btn_reset"-->
