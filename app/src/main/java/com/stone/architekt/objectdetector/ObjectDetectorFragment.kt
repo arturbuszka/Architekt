@@ -11,6 +11,7 @@ import android.Manifest
 import android.graphics.Bitmap
 import android.hardware.camera2.CameraCharacteristics
 import android.net.Uri
+import android.view.animation.AlphaAnimation
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -28,6 +29,7 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
     private lateinit var binding: FragmentObjectdetectorBinding
     private lateinit var cameraView: CameraBridgeViewBase
     private lateinit var captureButton: View
+
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -52,13 +54,33 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         captureButton = binding.btnNewPhoto
         initCamera()
         requestCameraPermission()
+
         viewModel.cameraState.observe(viewLifecycleOwner, Observer { cameraState ->
             when (cameraState) {
                 ObjectDetectorViewModel.CameraState.PREVIEWING -> showCameraPreview()
                 ObjectDetectorViewModel.CameraState.CAPTURED -> showCapturedImage()
+                ObjectDetectorViewModel.CameraState.LOADING -> showLoading()
             }
         })
         return binding.root
+    }
+
+    private fun playLoadingAnimation() {
+        val loadingAnimation = AlphaAnimation(0.1f, 1f).apply {
+            duration = 1
+            repeatCount = AlphaAnimation.INFINITE
+            repeatMode = AlphaAnimation.REVERSE
+        }
+        captureButton.startAnimation(loadingAnimation)
+    }
+
+    private fun resetLoadingAnimation() {
+        captureButton.clearAnimation()
+    }
+
+    private fun showLoading() {
+        captureButton.isEnabled = false
+        playLoadingAnimation()
     }
 
     private fun showCapturedImage() {
@@ -70,6 +92,8 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
     }
 
     private fun showCameraPreview() {
+        captureButton.isEnabled = true
+        resetLoadingAnimation()
         cameraView.enableView()
         cameraView.visibility = View.VISIBLE
         captureButton.visibility = View.VISIBLE

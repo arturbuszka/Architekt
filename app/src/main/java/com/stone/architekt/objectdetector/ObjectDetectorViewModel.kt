@@ -24,6 +24,7 @@ class ObjectDetectorViewModel : ViewModel() {
     enum class CameraState {
         PREVIEWING,
         CAPTURED,
+        LOADING
     }
 
     private val _cameraState = MutableLiveData<CameraState>()
@@ -53,6 +54,7 @@ class ObjectDetectorViewModel : ViewModel() {
     }
 
     fun onCaptureFrame() {
+        setCameraState(CameraState.LOADING)
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (boundingBoxFrameCaptured.empty()) {

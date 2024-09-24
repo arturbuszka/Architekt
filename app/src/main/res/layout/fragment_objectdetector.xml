@@ -17,19 +17,19 @@
 
         <org.opencv.android.JavaCameraView
             android:id="@+id/camera_view"
-            android:scaleType="centerCrop"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             android:visibility="visible" />
 
         <View
-            android:onClick="@{() -> viewModel.onCaptureFrame()}"
             android:id="@+id/btn_new_photo"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="32dp"
-            android:background="@drawable/circular_button" />
+            android:background="@drawable/circular_button"
+            android:onClick="@{() -> viewModel.onCaptureFrame()}" />
 
     </FrameLayout>
 </layout>
