@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.button.MaterialButton
 import com.stone.architekt.databinding.FragmentObjectdetectorBinding
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.core.Mat
@@ -28,7 +27,7 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
 
     private lateinit var binding: FragmentObjectdetectorBinding
     private lateinit var cameraView: CameraBridgeViewBase
-    private lateinit var captureButton: MaterialButton
+    private lateinit var captureButton: View
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -45,6 +44,7 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = FragmentObjectdetectorBinding.inflate(inflater)
         binding.lifecycleOwner = this
         viewModel = ViewModelProviders.of(this).get(ObjectDetectorViewModel::class.java)
@@ -52,21 +52,13 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         captureButton = binding.btnNewPhoto
         initCamera()
         requestCameraPermission()
-
         viewModel.cameraState.observe(viewLifecycleOwner, Observer { cameraState ->
             when (cameraState) {
                 ObjectDetectorViewModel.CameraState.PREVIEWING -> showCameraPreview()
                 ObjectDetectorViewModel.CameraState.CAPTURED -> showCapturedImage()
-                ObjectDetectorViewModel.CameraState.WAITING -> hide()
             }
         })
         return binding.root
-    }
-
-    private fun hide() {
-        cameraView.disableView()
-        cameraView.visibility = View.GONE
-        captureButton.visibility = View.GONE
     }
 
     private fun showCapturedImage() {
@@ -150,7 +142,6 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
 
     override fun onPause() {
         super.onPause()
-        viewModel.waitRequest()
     }
 
     private fun saveBitmapToFile(bitmap: Bitmap?): Uri {

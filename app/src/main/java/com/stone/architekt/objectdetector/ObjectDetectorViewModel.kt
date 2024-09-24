@@ -24,7 +24,6 @@ class ObjectDetectorViewModel : ViewModel() {
     enum class CameraState {
         PREVIEWING,
         CAPTURED,
-        WAITING
     }
 
     private val _cameraState = MutableLiveData<CameraState>()
@@ -42,10 +41,6 @@ class ObjectDetectorViewModel : ViewModel() {
         setCameraState(CameraState.PREVIEWING)
     }
 
-
-    fun waitRequest() {
-        setCameraState(CameraState.WAITING)
-    }
 
     fun resetCamera() {
         setCameraState(CameraState.PREVIEWING)
