@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.button.MaterialButton
 import com.stone.architekt.databinding.FragmentCapturedframeBinding
 
 class CapturedFrameFragment : Fragment() {
@@ -17,6 +19,7 @@ class CapturedFrameFragment : Fragment() {
     private lateinit var viewModel: CapturedFrameViewModel
     private lateinit var binding: FragmentCapturedframeBinding
     private lateinit var imageView: ImageView
+    private lateinit var resetButton: MaterialButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,9 +31,12 @@ class CapturedFrameFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(CapturedFrameViewModel::class.java)
         binding.viewModel = viewModel
         imageView = binding.capturedFrame
-
+        resetButton = binding.btnReset
         val args by navArgs<CapturedFrameFragmentArgs>()
         loadImageFromUri(Uri.parse((args.imageUri)))
+        binding.btnReset.setOnClickListener {
+            findNavController().navigate(CapturedFrameFragmentDirections.actionBackToObjectDetector())
+        }
 
         return binding.root
     }
