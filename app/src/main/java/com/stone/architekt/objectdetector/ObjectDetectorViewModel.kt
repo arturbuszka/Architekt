@@ -85,11 +85,11 @@ class ObjectDetectorViewModel : ViewModel() {
         _cameraState.value = state
     }
 
-    fun setPhoto(new: Bitmap?) {
+    private fun setPhoto(new: Bitmap?) {
         _newPhoto.value = new
     }
 
-    fun convertMatToBitmap(mat: Mat): Bitmap {
+    private fun convertMatToBitmap(mat: Mat): Bitmap {
         if (mat.empty()) {
             Log.d("objectdetector", "Mat is empty")
             throw IllegalArgumentException("Mat is empty")
@@ -99,7 +99,7 @@ class ObjectDetectorViewModel : ViewModel() {
         return bitmap
     }
 
-    fun boundingBox(frame: Mat): Mat {
+    private fun boundingBox(frame: Mat): Mat {
         val gray = Mat()
         Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY)
         Imgproc.GaussianBlur(gray, gray, Size(5.0, 5.0), 0.0)

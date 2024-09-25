@@ -14,8 +14,7 @@ import android.net.Uri
 import android.view.animation.AlphaAnimation
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.stone.architekt.databinding.FragmentObjectdetectorBinding
 import org.opencv.android.CameraBridgeViewBase
@@ -45,24 +44,25 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentObjectdetectorBinding.inflate(inflater)
         binding.lifecycleOwner = this
-        viewModel = ViewModelProviders.of(this).get(ObjectDetectorViewModel::class.java)
+        viewModel = ViewModelProvider(this)[ObjectDetectorViewModel::class.java]
         binding.viewModel = viewModel
         captureButton = binding.btnNewPhoto
         initCamera()
         requestCameraPermission()
 
 
-        viewModel.cameraState.observe(viewLifecycleOwner, Observer { cameraState ->
+        viewModel.cameraState.observe(viewLifecycleOwner) { cameraState ->
             when (cameraState) {
                 ObjectDetectorViewModel.CameraState.PREVIEWING -> showCameraPreview()
                 ObjectDetectorViewModel.CameraState.CAPTURED -> showCapturedImage()
                 ObjectDetectorViewModel.CameraState.LOADING -> showLoading()
+                null -> showCameraPreview()
             }
-        })
+        }
         return binding.root
     }
 
@@ -117,7 +117,7 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
                 Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED -> {
                 // Permission already granted
-                cameraView.setCameraPermissionGranted();
+                cameraView.setCameraPermissionGranted()
                 cameraView.enableView()
                 Log.d("objectdetector", "Camera view enabled")
             }
@@ -146,7 +146,7 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
 
     override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {
         Log.d("frame", "onCameraFrame")
-        var rgba = viewModel.proccesCaputredFrame(inputFrame!!.rgba())
+        val rgba = viewModel.proccesCaputredFrame(inputFrame!!.rgba())
         return rgba
     }
 
@@ -165,10 +165,6 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         ) {
             viewModel.resetCamera()
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     private fun saveBitmapToFile(bitmap: Bitmap?): Uri {

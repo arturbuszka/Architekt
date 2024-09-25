@@ -13,8 +13,8 @@ class CustomJavaCameraView(context: Context, attrs: AttributeSet?) : JavaCameraV
         if (mFrameWidth > 0 && mFrameHeight > 0) {
             val aspectRatio = mFrameWidth.toDouble() / mFrameHeight
 
-            var calculatedWidth: Int
-            var calculatedHeight: Int
+            val calculatedWidth: Int
+            val calculatedHeight: Int
 
             if (screenWidth.toDouble() / screenHeight > aspectRatio) {
                 calculatedWidth = screenWidth

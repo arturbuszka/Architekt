@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.button.MaterialButton
@@ -25,10 +25,10 @@ class CapturedFrameFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCapturedframeBinding.inflate(inflater)
         binding.lifecycleOwner = this
-        viewModel = ViewModelProviders.of(this).get(CapturedFrameViewModel::class.java)
+        viewModel = ViewModelProvider(this)[CapturedFrameViewModel::class.java]
         binding.viewModel = viewModel
         imageView = binding.capturedFrame
         resetButton = binding.btnReset

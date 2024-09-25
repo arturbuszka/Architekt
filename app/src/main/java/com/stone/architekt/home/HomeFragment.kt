@@ -12,13 +12,13 @@ import com.stone.architekt.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by lazy {
-        ViewModelProvider(this).get(HomeViewModel::class.java)
+        ViewModelProvider(this)[HomeViewModel::class.java]
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentHomeBinding.inflate(inflater)
         binding.lifecycleOwner = this
         binding.btnNew.setOnClickListener {
