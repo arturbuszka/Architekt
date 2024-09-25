@@ -55,6 +55,7 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         initCamera()
         requestCameraPermission()
 
+
         viewModel.cameraState.observe(viewLifecycleOwner, Observer { cameraState ->
             when (cameraState) {
                 ObjectDetectorViewModel.CameraState.PREVIEWING -> showCameraPreview()

@@ -35,7 +35,7 @@ class CapturedFrameFragment : Fragment() {
         val args by navArgs<CapturedFrameFragmentArgs>()
         loadImageFromUri(Uri.parse((args.imageUri)))
         binding.btnReset.setOnClickListener {
-            findNavController().navigate(CapturedFrameFragmentDirections.actionBackToObjectDetector())
+            findNavController().popBackStack()
         }
 
         return binding.root
