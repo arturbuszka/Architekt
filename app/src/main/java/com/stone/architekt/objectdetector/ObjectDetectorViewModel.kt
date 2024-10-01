@@ -29,7 +29,8 @@ class ObjectDetectorViewModel : ViewModel() {
     enum class CameraState {
         READY,
         CAPTURED,
-        ERROR
+        ERROR,
+        LOADING
     }
 
     private val _currentMode = MutableLiveData<DetectionMode>()
@@ -59,8 +60,17 @@ class ObjectDetectorViewModel : ViewModel() {
         _newPhoto.value = new
     }
 
-    fun setMode(mode: DetectionMode) {
+    private fun setMode(mode: DetectionMode) {
         _currentMode.value = mode
+    }
+
+
+    fun switchToLiveDetection() {
+        setMode(DetectionMode.LIVE_DETECTION)
+    }
+
+    fun switchToScanDocument() {
+        setMode(DetectionMode.SCAN_DOCUMENT)
     }
 
 
@@ -77,10 +87,8 @@ class ObjectDetectorViewModel : ViewModel() {
     fun onCaptureFrame() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                if (boundingBoxFrameCaptured.empty()) {
-                    Log.e("objectdetector", "Mat is empty before conversion")
-                    setCameraState(CameraState.READY)
-                    return@launch
+                withContext(Dispatchers.Main) {
+                    setCameraState(CameraState.LOADING)
                 }
                 Log.d("objectdetector", "Starting heavy processing")
                 val bitmap = convertMatToBitmap(boundingBoxFrameCaptured.clone())

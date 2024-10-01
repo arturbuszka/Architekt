@@ -66,8 +66,8 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
             == PackageManager.PERMISSION_GRANTED
         ) {
-            viewModel.resetCamera()
         }
+        viewModel.resetCamera()
     }
 
     override fun onDestroyView() {
@@ -91,6 +91,7 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         cameraView.enableView()
         cameraView.visibility = View.VISIBLE
         captureButton.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
     }
 
     private fun showCapturedImage() {
@@ -100,6 +101,10 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         cameraView.disableView()
         cameraView.visibility = View.GONE
         captureButton.visibility = View.GONE
+    }
+
+    private fun showLoading() {
+        binding.progressBar.visibility = View.VISIBLE
     }
 
     private fun setupObservers() {
@@ -112,6 +117,7 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
                 ObjectDetectorViewModel.CameraState.READY -> showCameraPreview()
                 ObjectDetectorViewModel.CameraState.CAPTURED -> showCapturedImage()
                 ObjectDetectorViewModel.CameraState.ERROR -> showCameraPreview()
+                ObjectDetectorViewModel.CameraState.LOADING -> showLoading()
             }
         }
     }
@@ -152,14 +158,36 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
 
     private fun setupUIInteractions() {
         setupCaptureButtonAnimation()
+        setupLiveDetectionButtonAnimation()
+        setupScanDocumentButtonAnimation()
     }
 
+    private fun setupLiveDetectionButtonAnimation() {
+        binding.btnLiveDetection.setOnClickListener {
+            viewModel.switchToLiveDetection()
+        }
+    }
+
+    private fun setupScanDocumentButtonAnimation() {
+        binding.btnScanDocument.setOnClickListener {
+            viewModel.switchToScanDocument()
+        }
+    }
 
     private fun setupCaptureButtonAnimation() {
         binding.btnNewPhoto.setOnClickListener {
             animateCaptureButton(it)
             viewModel.onCaptureFrame()
         }
+    }
+
+    private fun animateCaptureButton(view: View) {
+        val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f, 1.1f, 1.0f)
+        val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 1.1f, 1.0f)
+
+        val animator = android.animation.ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY)
+        animator.duration = 150
+        animator.start()
     }
 
     override fun onCameraViewStarted(width: Int, height: Int) {
@@ -174,16 +202,6 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         Log.d("frame", "onCameraFrame")
         val rgba = viewModel.proccesCaputredFrame(inputFrame!!.rgba())
         return rgba
-    }
-
-
-    private fun animateCaptureButton(view: View) {
-        val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f, 1.1f, 1.0f)
-        val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 1.1f, 1.0f)
-
-        val animator = android.animation.ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY)
-        animator.duration = 150
-        animator.start()
     }
 
     private fun requestCameraPermission() {

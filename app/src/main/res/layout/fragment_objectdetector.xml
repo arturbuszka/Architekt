@@ -24,6 +24,13 @@
             android:scaleType="centerCrop"
             android:visibility="visible" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
 
         <LinearLayout
             android:id="@+id/top_menu"
@@ -65,8 +72,7 @@
             android:layout_height="80dp"
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="32dp"
-            android:background="@drawable/circular_button"
-            android:onClick="@{() -> viewModel.onCaptureFrame()}" />
+            android:background="@drawable/circular_button" />
 
     </FrameLayout>
 </layout>
