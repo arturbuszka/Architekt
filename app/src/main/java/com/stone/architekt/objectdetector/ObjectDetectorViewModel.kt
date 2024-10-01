@@ -21,11 +21,19 @@ import org.opencv.imgproc.Imgproc
 
 class ObjectDetectorViewModel : ViewModel() {
 
-    enum class CameraState {
-        PREVIEWING,
-        CAPTURED,
-        LOADING
+    enum class DetectionMode {
+        LIVE_DETECTION,
+        SCAN_DOCUMENT
     }
+
+    enum class CameraState {
+        READY,
+        CAPTURED,
+        ERROR
+    }
+
+    private val _currentMode = MutableLiveData<DetectionMode>()
+    val currentMode: LiveData<DetectionMode> = _currentMode
 
     private val _cameraState = MutableLiveData<CameraState>()
     val cameraState: LiveData<CameraState>
@@ -39,12 +47,25 @@ class ObjectDetectorViewModel : ViewModel() {
 
     init {
         loadDependencies()
-        setCameraState(CameraState.PREVIEWING)
+        setCameraState(CameraState.READY)
+        setMode(DetectionMode.LIVE_DETECTION)
+    }
+
+    private fun setCameraState(state: CameraState) {
+        _cameraState.value = state
+    }
+
+    private fun setPhoto(new: Bitmap?) {
+        _newPhoto.value = new
+    }
+
+    fun setMode(mode: DetectionMode) {
+        _currentMode.value = mode
     }
 
 
     fun resetCamera() {
-        setCameraState(CameraState.PREVIEWING)
+        setCameraState(CameraState.READY)
         setPhoto(null)
     }
 
@@ -54,12 +75,11 @@ class ObjectDetectorViewModel : ViewModel() {
     }
 
     fun onCaptureFrame() {
-        setCameraState(CameraState.LOADING)
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (boundingBoxFrameCaptured.empty()) {
                     Log.e("objectdetector", "Mat is empty before conversion")
-                    setCameraState(CameraState.PREVIEWING)
+                    setCameraState(CameraState.READY)
                     return@launch
                 }
                 Log.d("objectdetector", "Starting heavy processing")
@@ -75,19 +95,12 @@ class ObjectDetectorViewModel : ViewModel() {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     Log.d("objectdetector", "Error during processing")
-                    setCameraState(CameraState.PREVIEWING)
+                    setCameraState(CameraState.READY)
                 }
             }
         }
     }
 
-    private fun setCameraState(state: CameraState) {
-        _cameraState.value = state
-    }
-
-    private fun setPhoto(new: Bitmap?) {
-        _newPhoto.value = new
-    }
 
     private fun convertMatToBitmap(mat: Mat): Bitmap {
         if (mat.empty()) {

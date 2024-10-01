@@ -6,4 +6,6 @@
     <string name="description_image">description</string>
     <string name="loading">loading...</string>
     <string name="sample">sample</string>
+    <string name="scan_document">scan document</string>
+    <string name="live_shape_detection">live shape detection</string>
 </resources>

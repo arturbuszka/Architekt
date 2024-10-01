@@ -10,4 +10,15 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <!-- Darcula Theme Colors -->
+    <color name="darcula_background">#2B2B2B</color>
+    <color name="darcula_primary">#3C3F41</color>
+    <color name="darcula_accent">#61AFEF</color> <!-- Teal or Blue for accent -->
+    <color name="icon_inactive">#A0A0A0</color> <!-- Light gray for inactive icons -->
+    <color name="icon_active">#61AFEF</color> <!-- Accent color for active icons -->
+
+
+
 </resources>

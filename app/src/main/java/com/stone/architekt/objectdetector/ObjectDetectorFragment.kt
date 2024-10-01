@@ -1,21 +1,22 @@
 package com.stone.architekt.objectdetector
 
+import android.Manifest
+import android.animation.PropertyValuesHolder
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.hardware.camera2.CameraCharacteristics
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import android.Manifest
-import android.graphics.Bitmap
-import android.hardware.camera2.CameraCharacteristics
-import android.net.Uri
-import android.view.animation.AlphaAnimation
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.stone.architekt.R
 import com.stone.architekt.databinding.FragmentObjectdetectorBinding
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.core.Mat
@@ -53,35 +54,43 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         captureButton = binding.btnNewPhoto
         initCamera()
         requestCameraPermission()
+        setupObservers()
+        setupUIInteractions()
 
 
-        viewModel.cameraState.observe(viewLifecycleOwner) { cameraState ->
-            when (cameraState) {
-                ObjectDetectorViewModel.CameraState.PREVIEWING -> showCameraPreview()
-                ObjectDetectorViewModel.CameraState.CAPTURED -> showCapturedImage()
-                ObjectDetectorViewModel.CameraState.LOADING -> showLoading()
-                null -> showCameraPreview()
-            }
-        }
         return binding.root
     }
 
-    private fun playLoadingAnimation() {
-        val loadingAnimation = AlphaAnimation(0.1f, 1f).apply {
-            duration = 1
-            repeatCount = AlphaAnimation.INFINITE
-            repeatMode = AlphaAnimation.REVERSE
+    override fun onResume() {
+        super.onResume()
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            viewModel.resetCamera()
         }
-        captureButton.startAnimation(loadingAnimation)
     }
 
-    private fun resetLoadingAnimation() {
-        captureButton.clearAnimation()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (::cameraView.isInitialized) {
+            cameraView.disableView()
+            viewModel.resetCamera()
+        }
     }
 
-    private fun showLoading() {
-        captureButton.isEnabled = false
-        playLoadingAnimation()
+    private fun initCamera() {
+        cameraView = binding.cameraView
+        cameraView.enableView()
+        cameraView.setCameraIndex(CameraCharacteristics.LENS_FACING_FRONT)
+        cameraView.setCvCameraViewListener(this)
+        Log.d("objectdetector", "set CvCameraViewListener")
+    }
+
+    private fun showCameraPreview() {
+        captureButton.isEnabled = true
+        cameraView.enableView()
+        cameraView.visibility = View.VISIBLE
+        captureButton.visibility = View.VISIBLE
     }
 
     private fun showCapturedImage() {
@@ -91,23 +100,90 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         cameraView.disableView()
         cameraView.visibility = View.GONE
         captureButton.visibility = View.GONE
-
     }
 
-    private fun showCameraPreview() {
-        captureButton.isEnabled = true
-        resetLoadingAnimation()
-        cameraView.enableView()
-        cameraView.visibility = View.VISIBLE
-        captureButton.visibility = View.VISIBLE
+    private fun setupObservers() {
+        viewModel.currentMode.observe(viewLifecycleOwner) { mode ->
+            updateUIForMode(mode)
+        }
+
+        viewModel.cameraState.observe(viewLifecycleOwner) { cameraState ->
+            when (cameraState) {
+                ObjectDetectorViewModel.CameraState.READY -> showCameraPreview()
+                ObjectDetectorViewModel.CameraState.CAPTURED -> showCapturedImage()
+                ObjectDetectorViewModel.CameraState.ERROR -> showCameraPreview()
+            }
+        }
     }
 
-    private fun initCamera() {
-        cameraView = binding.cameraView
-        cameraView.enableView()
-        cameraView.setCameraIndex(CameraCharacteristics.LENS_FACING_FRONT)
-        cameraView.setCvCameraViewListener(this)
-        Log.d("objectdetector", "set CvCameraViewListener")
+    private fun updateUIForMode(mode: ObjectDetectorViewModel.DetectionMode) {
+        when (mode) {
+            ObjectDetectorViewModel.DetectionMode.LIVE_DETECTION -> {
+                binding.btnLiveDetection.setColorFilter(
+                    resources.getColor(
+                        R.color.icon_active,
+                        null
+                    )
+                )
+                binding.btnScanDocument.setColorFilter(
+                    resources.getColor(
+                        R.color.icon_inactive,
+                        null
+                    )
+                )
+            }
+
+            ObjectDetectorViewModel.DetectionMode.SCAN_DOCUMENT -> {
+                binding.btnLiveDetection.setColorFilter(
+                    resources.getColor(
+                        R.color.icon_inactive,
+                        null
+                    )
+                )
+                binding.btnScanDocument.setColorFilter(
+                    resources.getColor(
+                        R.color.icon_active,
+                        null
+                    )
+                )
+            }
+        }
+    }
+
+    private fun setupUIInteractions() {
+        setupCaptureButtonAnimation()
+    }
+
+
+    private fun setupCaptureButtonAnimation() {
+        binding.btnNewPhoto.setOnClickListener {
+            animateCaptureButton(it)
+            viewModel.onCaptureFrame()
+        }
+    }
+
+    override fun onCameraViewStarted(width: Int, height: Int) {
+        Log.d("objectdetector", "Camera view started")
+    }
+
+    override fun onCameraViewStopped() {
+        Log.d("objectdetector", "Camera view stopped")
+    }
+
+    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {
+        Log.d("frame", "onCameraFrame")
+        val rgba = viewModel.proccesCaputredFrame(inputFrame!!.rgba())
+        return rgba
+    }
+
+
+    private fun animateCaptureButton(view: View) {
+        val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f, 1.1f, 1.0f)
+        val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 1.1f, 1.0f)
+
+        val animator = android.animation.ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY)
+        animator.duration = 150
+        animator.start()
     }
 
     private fun requestCameraPermission() {
@@ -136,36 +212,6 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
         }
     }
 
-    override fun onCameraViewStarted(width: Int, height: Int) {
-        Log.d("objectdetector", "Camera view started")
-    }
-
-    override fun onCameraViewStopped() {
-        Log.d("objectdetector", "Camera view stopped")
-    }
-
-    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {
-        Log.d("frame", "onCameraFrame")
-        val rgba = viewModel.proccesCaputredFrame(inputFrame!!.rgba())
-        return rgba
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        if (::cameraView.isInitialized) {
-            cameraView.disableView()
-            viewModel.resetCamera()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            viewModel.resetCamera()
-        }
-    }
 
     private fun saveBitmapToFile(bitmap: Bitmap?): Uri {
         val file = File(requireContext().cacheDir, "captured_frame.png")
