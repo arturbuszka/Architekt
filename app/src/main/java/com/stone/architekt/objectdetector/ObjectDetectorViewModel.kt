@@ -6,6 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.stone.architekt.imageprocessing.pipeline.ProcessingPipeline
+import com.stone.architekt.imageprocessing.steps.BlurStep
+import com.stone.architekt.imageprocessing.steps.DetailEnhanceStep
+import com.stone.architekt.imageprocessing.steps.EdgeDetectionStep
+import com.stone.architekt.imageprocessing.steps.GrayscaleStep
+import com.stone.architekt.imageprocessing.steps.ShapeClassificationStep
+import com.stone.architekt.imageprocessing.steps.ShapeDetectionStep
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -44,10 +51,34 @@ class ObjectDetectorViewModel : ViewModel() {
     val photo: LiveData<Bitmap?>
         get() = _newPhoto
 
+
+    private val pipeline = ProcessingPipeline()
+
+    // Steps
+    private lateinit var grayscaleStep: GrayscaleStep
+    private lateinit var blurStep: BlurStep
+    private lateinit var edgeDetectionStep: EdgeDetectionStep
+    private lateinit var shapeDetectionStep: ShapeDetectionStep
+
     private lateinit var boundingBoxFrameCaptured: Mat
 
     init {
         loadDependencies()
+        boundingBoxFrameCaptured = Mat()
+        grayscaleStep =
+            GrayscaleStep()
+        blurStep =
+            BlurStep(5.0)
+        edgeDetectionStep =
+            EdgeDetectionStep()
+        shapeDetectionStep =
+            ShapeDetectionStep(boundingBoxFrameCaptured)
+
+        pipeline.addStep(grayscaleStep)
+        pipeline.addStep(blurStep)
+        pipeline.addStep(edgeDetectionStep)
+        pipeline.addStep(shapeDetectionStep)
+
         setCameraState(CameraState.READY)
         setMode(DetectionMode.LIVE_DETECTION)
     }
@@ -80,7 +111,14 @@ class ObjectDetectorViewModel : ViewModel() {
     }
 
     fun proccesCaputredFrame(frame: Mat): Mat {
-        boundingBoxFrameCaptured = boundingBox(frame)
+        if (!::boundingBoxFrameCaptured.isInitialized) {
+            // Initialize boundingBoxFrameCaptured only when the first frame arrives
+            boundingBoxFrameCaptured = frame.clone()  // Clone the first frame
+        } else {
+            // For subsequent frames, you can reuse the Mat
+            frame.copyTo(boundingBoxFrameCaptured)
+        }
+        pipeline.applyPipeline(frame)
         return boundingBoxFrameCaptured
     }
 

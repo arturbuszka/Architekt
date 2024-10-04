@@ -3,23 +3,23 @@ package com.stone.architekt.imageprocessing.steps
 import com.stone.architekt.imageprocessing.pipeline.ImageProcessingStep
 import org.json.JSONObject
 import org.opencv.core.Mat
+import org.opencv.core.Size
+import org.opencv.imgproc.Imgproc
 import org.opencv.photo.Photo
 
-class DetailEnhanceStep(
-    private val sigmaS: Float = 20.0f,
-    private val sigmaR: Float = 0.15f
+class BlurStep(
+    private val size: Double = 5.0
 ) : ImageProcessingStep {
     override fun process(image: Mat): Mat {
-        val enhanced = Mat()
-        Photo.detailEnhance(image, enhanced, sigmaS, sigmaR)
-        return enhanced
+        val blurred = Mat()
+        Imgproc.GaussianBlur(image, blurred, Size(size, size), 0.0)
+        return blurred
     }
 
     override fun toJson(): JSONObject {
         val jsonObject = JSONObject()
-        jsonObject.put("type", "DetailEnhanceStep")
-        jsonObject.put("sigmaS", sigmaS.toDouble())
-        jsonObject.put("sigmaR", sigmaR.toDouble())
+        jsonObject.put("type", "BlurStep")
+        jsonObject.put("size", size)
         return jsonObject
     }
 }
