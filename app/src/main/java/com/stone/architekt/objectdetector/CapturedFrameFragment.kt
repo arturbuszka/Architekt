@@ -1,6 +1,5 @@
 package com.stone.architekt.objectdetector
 
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +9,6 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.google.android.material.button.MaterialButton
 import com.stone.architekt.databinding.FragmentCapturedframeBinding
 
@@ -32,8 +30,10 @@ class CapturedFrameFragment : Fragment() {
         binding.viewModel = viewModel
         imageView = binding.capturedFrame
         resetButton = binding.btnReset
-        val args by navArgs<CapturedFrameFragmentArgs>()
-        loadImageFromUri(Uri.parse((args.imageUri)))
+        viewModel.initFrame()
+        setupObservers()
+//        val args by navArgs<CapturedFrameFragmentArgs>()
+//        loadImageFromUri(Uri.parse((args.imageUri)))
         binding.btnReset.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -41,10 +41,18 @@ class CapturedFrameFragment : Fragment() {
         return binding.root
     }
 
-    private fun loadImageFromUri(uri: Uri) {
-        val bitmap =
-            BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))
-        imageView.setImageBitmap(bitmap)
+    private fun setupObservers() {
+        viewModel.frame.observe(viewLifecycleOwner) { frame ->
+            if (frame != null) {
+                imageView.setImageBitmap(convertMatToBitmap(frame))
+            }
+        }
     }
+
+//    private fun loadImageFromUri(uri: Uri) {
+//        val bitmap =
+//            BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))
+//        imageView.setImageBitmap(bitmap)
+//    }
 
 }
