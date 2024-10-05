@@ -1,22 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.stone.architekt.objectdetector.ObjectDetectorViewModel" />
     </data>
 
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black">
+        android:background="@color/darker_background">
 
-
+        <!-- Camera View -->
         <org.opencv.android.JavaCameraView
             android:id="@+id/camera_view"
             android:layout_width="match_parent"
@@ -24,37 +21,44 @@
             android:scaleType="centerCrop"
             android:visibility="visible" />
 
+        <!-- Progress Bar -->
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:indeterminateTint="@color/icon_color" />
 
-
+        <!-- Top Menu with Buttons -->
         <LinearLayout
             android:id="@+id/top_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|top"
-            android:background="@android:color/black"
+            android:background="@color/dark_background"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="16dp">
 
+            <!-- Live Detection Button -->
             <ImageButton
+                android:clickable="false"
+                android:visibility="gone"
                 android:id="@+id/btn_live_detection"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/live_shape_detection"
                 android:src="@drawable/ic_live_detection"
-                app:tint="@android:color/white" />
+                app:tint="@color/icon_color" />
 
-            <Space
-                android:layout_width="16dp"
-                android:layout_height="0dp" />
+<!--            &lt;!&ndash; Spacing &ndash;&gt;-->
+<!--            <Space-->
+<!--                android:layout_width="16dp"-->
+<!--                android:layout_height="0dp" />-->
 
+            <!-- Scan Document Button -->
             <ImageButton
                 android:id="@+id/btn_scan_document"
                 android:layout_width="48dp"
@@ -62,10 +66,10 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/scan_document"
                 android:src="@drawable/ic_scan_document"
-                app:tint="@android:color/white" />
+                app:tint="@color/icon_color" />
         </LinearLayout>
 
-
+        <!-- Capture Photo Button -->
         <View
             android:id="@+id/btn_new_photo"
             android:layout_width="80dp"
@@ -73,6 +77,5 @@
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="32dp"
             android:background="@drawable/circular_button" />
-
     </FrameLayout>
 </layout>

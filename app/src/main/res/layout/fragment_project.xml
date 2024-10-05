@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.stone.architekt.project.ProjectViewModel" />
@@ -13,38 +11,43 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/dark_background"
         tools:context=".ProjectFragment">
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <!-- Gallery Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_gallery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="gallery"
+                android:text="Gallery"
                 android:onClick="@{() -> viewModel.onGallerySelect()}"
+                android:textColor="@color/button_text"
+                android:backgroundTint="@color/primary_button"
                 app:cornerRadius="16dp" />
 
+            <!-- Camera Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="photo"
+                android:text="Photo"
+                android:textColor="@color/button_text"
+                android:backgroundTint="@color/primary_button"
                 app:cornerRadius="16dp" />
 
+            <!-- Main ImageView for Project -->
             <ImageView
                 android:id="@+id/main_photo_image"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="266dp"
                 android:scaleType="centerCrop"
-
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/darker_background"
                 tools:src="@tools:sample/backgrounds/scenic" />
         </LinearLayout>
 
