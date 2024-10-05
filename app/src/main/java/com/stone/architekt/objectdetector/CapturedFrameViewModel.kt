@@ -12,12 +12,10 @@ class CapturedFrameViewModel : ViewModel() {
     val frame: LiveData<Mat?>
         get() = _frame
 
-
     init {
-        initFrame()
     }
 
-    private fun initFrame() {
+    fun initFrame() {
         val capturedFrame = _matRepository.getMat("captured_frame")
         if (capturedFrame != null) {
             setFrame(capturedFrame)

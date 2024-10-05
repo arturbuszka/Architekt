@@ -30,6 +30,7 @@ class CapturedFrameFragment : Fragment() {
         binding.viewModel = viewModel
         imageView = binding.capturedFrame
         resetButton = binding.btnReset
+        viewModel.initFrame()
         setupObservers()
 //        val args by navArgs<CapturedFrameFragmentArgs>()
 //        loadImageFromUri(Uri.parse((args.imageUri)))
