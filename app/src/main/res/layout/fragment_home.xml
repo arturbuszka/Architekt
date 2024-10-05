@@ -1,36 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.stone.architekt.home.HomeViewModel" />
     </data>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
+        android:background="@color/dark_background"
         android:padding="16dp">
 
+        <!-- New Project Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_new"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="new project"
+            android:text="New Project"
+            android:textColor="@color/button_text"
+            android:backgroundTint="@color/primary_button"
             app:cornerRadius="16dp" />
 
+        <!-- Camera Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_object_detector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="camera"
+            android:text="Camera"
+            android:textColor="@color/button_text"
+            android:backgroundTint="@color/primary_button"
             app:cornerRadius="16dp" />
 
     </LinearLayout>

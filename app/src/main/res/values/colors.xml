@@ -20,5 +20,25 @@
     <color name="icon_active">#61AFEF</color> <!-- Accent color for active icons -->
 
 
+    <!-- Dark Background -->
+    <color name="dark_background">#2B2B2B</color>
+    <color name="darker_background">#1E1E1E</color>
+
+    <!-- Light Text -->
+    <color name="light_text">#A9B7C6</color>
+    <color name="lighter_text">#C7C7C7</color>
+
+    <!-- Button and Icon Colors -->
+    <color name="primary_button">#3C3F41</color>
+    <color name="button_text">#FFFFFF</color>
+    <color name="icon_color">#A9B7C6</color>
+
+    <!-- Additional Colors -->
+    <color name="seekbar_color">#3C3F41</color>
+    <color name="seekbar_thumb_color">#A9B7C6</color>
+
+
+
+
 
 </resources>
