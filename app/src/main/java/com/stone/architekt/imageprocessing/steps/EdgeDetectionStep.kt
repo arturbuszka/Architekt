@@ -3,9 +3,7 @@ package com.stone.architekt.imageprocessing.steps
 import com.stone.architekt.imageprocessing.pipeline.ImageProcessingStep
 import org.json.JSONObject
 import org.opencv.core.Mat
-import org.opencv.core.Size
 import org.opencv.imgproc.Imgproc
-import org.opencv.photo.Photo
 
 class EdgeDetectionStep(
 ) : ImageProcessingStep {

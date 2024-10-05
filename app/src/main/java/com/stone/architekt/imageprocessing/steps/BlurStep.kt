@@ -5,7 +5,6 @@ import org.json.JSONObject
 import org.opencv.core.Mat
 import org.opencv.core.Size
 import org.opencv.imgproc.Imgproc
-import org.opencv.photo.Photo
 
 class BlurStep(
     private val size: Double = 5.0

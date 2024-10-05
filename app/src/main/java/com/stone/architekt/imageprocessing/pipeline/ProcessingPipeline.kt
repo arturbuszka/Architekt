@@ -3,7 +3,6 @@ package com.stone.architekt.imageprocessing.pipeline
 import com.stone.architekt.imageprocessing.steps.BlurStep
 import com.stone.architekt.imageprocessing.steps.DetailEnhanceStep
 import com.stone.architekt.imageprocessing.steps.EdgeDetectionStep
-import com.stone.architekt.imageprocessing.steps.ShapeDetectionStep
 import org.json.JSONException
 import org.json.JSONObject
 import org.opencv.core.Mat

@@ -4,7 +4,6 @@ import com.stone.architekt.imageprocessing.pipeline.ImageProcessingStep
 import org.json.JSONObject
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
-import org.opencv.photo.Photo
 
 class GrayscaleStep() : ImageProcessingStep {
     override fun process(image: Mat): Mat {

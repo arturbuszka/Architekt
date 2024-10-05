@@ -12,7 +12,7 @@ import org.opencv.core.Size
 import org.opencv.imgproc.Imgproc
 
 
-private fun convertMatToBitmap(mat: Mat): Bitmap {
+fun convertMatToBitmap(mat: Mat): Bitmap {
     if (mat.empty()) {
         Log.d("objectdetector", "Mat is empty")
         throw IllegalArgumentException("Mat is empty")

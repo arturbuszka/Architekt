@@ -95,9 +95,9 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
     }
 
     private fun showCapturedImage() {
-        val uri = saveBitmapToFile(viewModel.photo.value)
+//        val uri = saveBitmapToFile(viewModel.photo.value)
         captureButton.isEnabled = false
-        findNavController().navigate(ObjectDetectorFragmentDirections.actionShowCapturedFrame(uri.toString()))
+        findNavController().navigate(ObjectDetectorFragmentDirections.actionShowCapturedFrame(""))
         cameraView.disableView()
         cameraView.visibility = View.GONE
         captureButton.visibility = View.GONE
