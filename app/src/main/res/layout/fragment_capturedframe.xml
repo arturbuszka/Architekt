@@ -15,15 +15,15 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Reset Button with Darcula Style -->
-        <com.google.android.material.button.MaterialButton
+        <ImageButton
             android:id="@+id/btn_reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reset"
-            android:textColor="@color/button_text"
-            android:backgroundTint="@color/primary_button"
-            app:cornerRadius="16dp" />
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_arrow_back"
+            android:background="@null"
+            app:tint="@color/white" />
+
 
         <!-- Captured Frame ImageView -->
         <ImageView
