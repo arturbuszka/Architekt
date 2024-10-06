@@ -8,61 +8,105 @@
             type="com.stone.architekt.home.HomeViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/dark_background"
-        android:orientation="vertical">
+        android:background="@color/dark_background">
 
         <!-- Top Panel for Buttons -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/topPanel"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/dark_background"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <!-- New Project Button (Now an Icon) -->
+            <!-- New Project Button (Icon) -->
             <ImageButton
                 android:id="@+id/btn_new"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:background="@null"
                 android:contentDescription="@string/new_project"
                 android:src="@drawable/ic_new_project"
-                android:background="@null"
                 app:tint="@color/white" />
 
-
-            <!-- Camera Button (Now an Icon) -->
+            <!-- Camera Button (Icon) -->
             <ImageButton
                 android:id="@+id/btn_object_detector"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:background="@null"
                 android:contentDescription="@string/camera"
                 android:src="@drawable/ic_photo_camera"
-                android:background="@null"
                 app:tint="@color/white" />
 
-            <!-- 3D Visualization Button (Now an Icon) -->
+            <!-- 3D Visualization Button (Icon) -->
             <ImageButton
                 android:id="@+id/btn_3d_visualization"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:background="@null"
                 android:contentDescription="@string/visualization"
                 android:src="@drawable/ic_3d_visualization"
-                android:background="@null"
                 app:tint="@color/white" />
 
         </LinearLayout>
 
-        <!-- Rest of the layout -->
-<!--        <FrameLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:padding="16dp">-->
-<!--        </FrameLayout>-->
+        <!-- Content Area (optional) -->
+        <FrameLayout
+            android:id="@+id/contentArea"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:padding="16dp"
+            app:layout_constraintBottom_toTopOf="@id/footer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topPanel">
+            <!-- Your main content can go here -->
+        </FrameLayout>
 
-    </LinearLayout>
+        <!-- Footer Panel for Company Info at the Bottom -->
+        <LinearLayout
+            android:id="@+id/footer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_background"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <!-- Company Icon -->
+            <ImageView
+                android:id="@+id/company_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="@string/company_icon"
+                android:src="@drawable/ic_stoneface_launcher"
+                app:tint="@color/white" />
+
+            <!-- Styled Company Name -->
+            <TextView
+                android:id="@+id/company_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="stone\nface"
+                android:paddingBottom="10dp"
+                android:textColor="@color/white"
+                android:textSize="8sp"
+                android:textStyle="normal" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

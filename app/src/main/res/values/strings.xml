@@ -12,4 +12,6 @@
     <string name="new_project">new project</string>
     <string name="camera">camera</string>
     <string name="visualization">3d visualization</string>
+    <string name="company_icon">company icon\n</string>
+    <string name="company_name">stone face</string>
 </resources>
