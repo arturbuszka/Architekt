@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|top"
-            android:background="@color/dark_background"
+            android:background="@color/black"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="16dp">
@@ -48,15 +48,10 @@
                 android:id="@+id/btn_live_detection"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@null"
                 android:contentDescription="@string/live_shape_detection"
                 android:src="@drawable/ic_live_detection"
                 app:tint="@color/icon_color" />
-
-<!--            &lt;!&ndash; Spacing &ndash;&gt;-->
-<!--            <Space-->
-<!--                android:layout_width="16dp"-->
-<!--                android:layout_height="0dp" />-->
 
             <!-- Scan Document Button -->
             <ImageButton

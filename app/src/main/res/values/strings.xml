@@ -9,4 +9,7 @@
     <string name="scan_document">scan document</string>
     <string name="live_shape_detection">live shape detection</string>
     <string name="back">back</string>
+    <string name="new_project">new project</string>
+    <string name="camera">camera</string>
+    <string name="visualization">3d visualization</string>
 </resources>

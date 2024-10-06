@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.stone.architekt.home.HomeViewModel" />
@@ -10,40 +11,58 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
         android:background="@color/dark_background"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <!-- New Project Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_new"
-            android:layout_width="wrap_content"
+        <!-- Top Panel for Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="New Project"
-            android:textColor="@color/button_text"
-            android:backgroundTint="@color/primary_button"
-            app:cornerRadius="16dp" />
+            android:background="@color/dark_background"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:padding="16dp">
 
-        <!-- Camera Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_object_detector"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Camera"
-            android:textColor="@color/button_text"
-            android:backgroundTint="@color/primary_button"
-            app:cornerRadius="16dp" />
+            <!-- New Project Button (Now an Icon) -->
+            <ImageButton
+                android:id="@+id/btn_new"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/new_project"
+                android:src="@drawable/ic_new_project"
+                android:background="@null"
+                app:tint="@color/white" />
 
-        <!-- 3D Visualization Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_3d_visualization"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3D Visualization"
-            android:textColor="@color/button_text"
-            android:backgroundTint="@color/primary_button"
-            app:cornerRadius="16dp" />
+
+            <!-- Camera Button (Now an Icon) -->
+            <ImageButton
+                android:id="@+id/btn_object_detector"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/camera"
+                android:src="@drawable/ic_photo_camera"
+                android:background="@null"
+                app:tint="@color/white" />
+
+            <!-- 3D Visualization Button (Now an Icon) -->
+            <ImageButton
+                android:id="@+id/btn_3d_visualization"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/visualization"
+                android:src="@drawable/ic_3d_visualization"
+                android:background="@null"
+                app:tint="@color/white" />
+
+        </LinearLayout>
+
+        <!-- Rest of the layout -->
+<!--        <FrameLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:padding="16dp">-->
+<!--        </FrameLayout>-->
 
     </LinearLayout>
 </layout>

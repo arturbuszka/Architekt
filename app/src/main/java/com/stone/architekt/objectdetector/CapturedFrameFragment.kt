@@ -38,7 +38,12 @@ class CapturedFrameFragment : Fragment() {
 //        val args by navArgs<CapturedFrameFragmentArgs>()
 //        loadImageFromUri(Uri.parse((args.imageUri)))
         resetButton.setOnClickListener {
-            resetButton.setColorFilter(ContextCompat.getColor(requireContext(),R.color.icon_active))
+            resetButton.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.icon_active
+                )
+            )
             findNavController().popBackStack()
 //            resetButton.setColorFilter(ContextCompat.getColor(requireContext(), R.color.white))
         }
@@ -47,7 +52,7 @@ class CapturedFrameFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.frame.observe(viewLifecycleOwner) { frame ->
-            if (frame != null) {
+            if (frame != null && !frame.empty()) {
                 imageView.setImageBitmap(convertMatToBitmap(frame))
             }
         }
