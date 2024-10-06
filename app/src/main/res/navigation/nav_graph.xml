@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_goToObjectDetector"
             app:destination="@id/objectdetectorFragment" />
+        <action
+            android:id="@+id/action_goToDesignVisualization"
+            app:destination="@id/designVisualizationFragment" />
     </fragment>
     <fragment
         android:id="@+id/projectFragment"
@@ -43,5 +46,11 @@
             android:id="@+id/action_backToObjectDetector"
             app:destination="@id/objectdetectorFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/designVisualizationFragment"
+        android:name="com.stone.architekt.designVisualization.DesignVisualizationFragment"
+        android:label="DesignVisualization"
+        tools:layout="@layout/fragment_designvisualization"></fragment>
+
 
 </navigation>

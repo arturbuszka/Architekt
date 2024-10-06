@@ -27,6 +27,9 @@ class HomeFragment : Fragment() {
         binding.btnObjectDetector.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionGoToObjectDetector())
         }
+        binding.btn3dVisualization.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionGoToDesignVisualization())
+        }
         return binding.root
 
     }

@@ -35,5 +35,15 @@
             android:backgroundTint="@color/primary_button"
             app:cornerRadius="16dp" />
 
+        <!-- 3D Visualization Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_3d_visualization"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3D Visualization"
+            android:textColor="@color/button_text"
+            android:backgroundTint="@color/primary_button"
+            app:cornerRadius="16dp" />
+
     </LinearLayout>
 </layout>
