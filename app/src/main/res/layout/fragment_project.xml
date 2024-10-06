@@ -3,53 +3,82 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.stone.architekt.project.ProjectViewModel" />
     </data>
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/dark_background"
         tools:context=".ProjectFragment">
 
+        <!-- Top Panel for Navigation/Buttons -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/topPanel"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:background="@color/dark_background"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <!-- Gallery Button -->
-            <com.google.android.material.button.MaterialButton
+            <ImageButton
                 android:id="@+id/btn_gallery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Gallery"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@null"
                 android:onClick="@{() -> viewModel.onGallerySelect()}"
-                android:textColor="@color/button_text"
-                android:backgroundTint="@color/primary_button"
-                app:cornerRadius="16dp" />
+                android:src="@drawable/ic_photo_library"
+                app:tint="@color/white" />
 
             <!-- Camera Button -->
-            <com.google.android.material.button.MaterialButton
+            <ImageButton
                 android:id="@+id/btn_camera"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:src="@drawable/ic_photo_camera"
                 android:text="Photo"
-                android:textColor="@color/button_text"
-                android:backgroundTint="@color/primary_button"
-                app:cornerRadius="16dp" />
+                app:tint="@color/white" />
 
-            <!-- Main ImageView for Project -->
-            <ImageView
-                android:id="@+id/main_photo_image"
-                android:layout_width="match_parent"
-                android:layout_height="266dp"
-                android:scaleType="centerCrop"
-                android:background="@color/darker_background"
-                tools:src="@tools:sample/backgrounds/scenic" />
         </LinearLayout>
 
-    </ScrollView>
+        <!-- Main Content (ScrollView) -->
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/dark_background"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topPanel">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Main ImageView for Project -->
+                <ImageView
+                    android:id="@+id/main_photo_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="266dp"
+                    android:background="@color/darker_background"
+                    android:scaleType="centerCrop"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+            </LinearLayout>
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
+
