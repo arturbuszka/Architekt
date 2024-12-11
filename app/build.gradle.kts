@@ -67,6 +67,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

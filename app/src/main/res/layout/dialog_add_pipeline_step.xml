@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data></data>
+
+    <RelativeLayout
+        android:id="@+id/steps_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_transparent"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="16dp"
+            android:text="@string/add_step"
+            android:textColor="@color/light_text"
+            android:textSize="18sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/steps_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_above="@id/close_button"
+            android:layout_below="@id/dialog_title"
+            android:clipToPadding="false"
+            android:padding="8dp" />
+
+        <ImageButton
+            android:id="@+id/close_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:background="@null"
+            android:contentDescription="@string/close_add_pipeline_dialog"
+            android:src="@drawable/ic_close"
+            app:tint="@color/white" />
+
+    </RelativeLayout>
+
+
+</layout>

@@ -1,0 +1,5 @@
+<!-- res/drawable/ic_detail_enhance.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#4CAF50" />
+    <corners android:radius="4dp" />
+</shape>

@@ -15,7 +15,7 @@ class ObjectDetectorViewModel : ViewModel() {
 
     enum class DetectionMode {
         LIVE_DETECTION,
-        SCAN_DOCUMENT
+        DEFAULT
     }
 
     enum class CameraState {
@@ -39,7 +39,7 @@ class ObjectDetectorViewModel : ViewModel() {
     init {
         _currentFrame = Mat()
         setCameraState(CameraState.READY)
-        setMode(DetectionMode.SCAN_DOCUMENT)
+        setMode(DetectionMode.DEFAULT)
     }
 
     private fun setCameraState(state: CameraState) {
@@ -50,7 +50,7 @@ class ObjectDetectorViewModel : ViewModel() {
         _currentMode.value = mode
         _cameraMode = when (mode) {
             DetectionMode.LIVE_DETECTION -> LiveDetectionMode()
-            DetectionMode.SCAN_DOCUMENT -> ScanDocumentMode()
+            DetectionMode.DEFAULT -> DefaultMode()
         }
     }
 
@@ -60,7 +60,7 @@ class ObjectDetectorViewModel : ViewModel() {
     }
 
     fun switchToScanDocument() {
-        setMode(DetectionMode.SCAN_DOCUMENT)
+        setMode(DetectionMode.DEFAULT)
     }
 
 

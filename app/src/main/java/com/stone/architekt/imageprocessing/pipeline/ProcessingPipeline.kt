@@ -10,12 +10,20 @@ import org.opencv.core.Mat
 class ProcessingPipeline {
     private val steps = mutableListOf<ImageProcessingStep>()
 
+    fun getSteps(): List<ImageProcessingStep> {
+        return steps
+    }
+
     fun addStep(step: ImageProcessingStep) {
         steps.add(step)
     }
 
     fun removeStep(step: Class<out ImageProcessingStep>) {
         steps.removeIf { it.javaClass == step }
+    }
+
+    fun clearSteps() {
+        steps.clear()
     }
 
     fun applyPipeline(image: Mat): Mat {
@@ -44,18 +52,22 @@ class ProcessingPipeline {
                     "DetailEnhanceStep" -> {
                         val sigmaS = stepObject.getDouble("sigmaS")
                         val sigmaR = stepObject.getDouble("sigmaR")
-                        val detailEnhanceStep = DetailEnhanceStep(sigmaS.toFloat(), sigmaR.toFloat())
+                        val detailEnhanceStep =
+                            DetailEnhanceStep(sigmaS.toFloat(), sigmaR.toFloat())
                         addStep(detailEnhanceStep)
                     }
+
                     "BlurStep" -> {
                         val blurSize = stepObject.getDouble("size")
                         val blurStep = BlurStep(blurSize)
                         addStep(blurStep)
                     }
+
                     "EdgeDetectionStep" -> {
                         val edgeDetectionStep = EdgeDetectionStep()
                         addStep(edgeDetectionStep)
                     }
+
                     "ShapeDetectionStep" -> {
 //                        val shapeDetectionStep = ShapeDetectionStep()
 //                        addStep(shapeDetectionStep)

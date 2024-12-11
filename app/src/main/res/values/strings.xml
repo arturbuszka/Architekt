@@ -14,4 +14,9 @@
     <string name="visualization">3d visualization</string>
     <string name="company_icon">company icon\n</string>
     <string name="company_name">stone face</string>
+    <string name="add_step">image procesinng pipeline steps</string>
+    <string name="close_pipeline_dialog">close pipeline dialog</string>
+    <string name="parameter_adjustments">parameter adjustments</string>
+    <string name="close_add_pipeline_dialog">close add pipeline step</string>
+    <string name="step_icon">pipeline step</string>
 </resources>

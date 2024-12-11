@@ -139,7 +139,7 @@ class ObjectDetectorFragment : Fragment(), CameraBridgeViewBase.CvCameraViewList
                 )
             }
 
-            ObjectDetectorViewModel.DetectionMode.SCAN_DOCUMENT -> {
+            ObjectDetectorViewModel.DetectionMode.DEFAULT -> {
                 binding.btnLiveDetection.setColorFilter(
                     resources.getColor(
                         R.color.icon_inactive,

@@ -1,6 +1,5 @@
 package com.stone.architekt.objectdetector
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.stone.architekt.R
 import com.stone.architekt.databinding.FragmentCapturedframeBinding
+import com.stone.architekt.pipelineControl.PipelineControlDialogFragment
 
 class CapturedFrameFragment : Fragment() {
 
@@ -31,12 +31,14 @@ class CapturedFrameFragment : Fragment() {
         binding.lifecycleOwner = this
         viewModel = ViewModelProvider(this)[CapturedFrameViewModel::class.java]
         binding.viewModel = viewModel
+
         imageView = binding.capturedFrame
         resetButton = binding.btnReset
+
         viewModel.initFrame()
+
         setupObservers()
-//        val args by navArgs<CapturedFrameFragmentArgs>()
-//        loadImageFromUri(Uri.parse((args.imageUri)))
+
         resetButton.setOnClickListener {
             resetButton.setColorFilter(
                 ContextCompat.getColor(
@@ -47,6 +49,7 @@ class CapturedFrameFragment : Fragment() {
             findNavController().popBackStack()
 //            resetButton.setColorFilter(ContextCompat.getColor(requireContext(), R.color.white))
         }
+
         return binding.root
     }
 
@@ -56,6 +59,13 @@ class CapturedFrameFragment : Fragment() {
                 imageView.setImageBitmap(convertMatToBitmap(frame))
             }
         }
+    }
+
+    private fun showPipelineControlDialog() {
+//        val dialog = PipelineControlDialogFragment(viewModel.customMode) {
+//            viewModel.reprocessFrame()
+//        }
+//        dialog.show(parentFragmentManager, "PipelineControlDialog")
     }
 
 //    private fun loadImageFromUri(uri: Uri) {
